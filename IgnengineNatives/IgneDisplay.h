@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<X11/X.h>
+#include<X11/Xlib.h>
+#include<GL/gl.h>
+#include<GL/glx.h>
+#include<GL/glu.h>
+
+extern "C" {
+    int* GetAttributes();
+
+    XEvent * GetNextEvent(
+        Display * dpy
+        );
+
+    Bool IsExposeEvent(
+        XEvent * event
+        );
+
+    Bool IsCloseEvent(
+        XEvent * event, 
+        Display * dpy
+        );
+
+    Visual * GetVisualAndDepth(
+        XVisualInfo * vi, 
+        int depth
+        );
+
+    XSetWindowAttributes * GetSwaWith(
+        Colormap cmap, 
+        long event_mask
+        );
+
+    void EnableCloseEvent(
+        Display * dpy, 
+        Window win
+        );
+
+    void ClearGLXContext(
+        Display * dpy, 
+        Window win
+        );
+
+    void AcquireHeightFromWas(
+        Display * dpy, 
+        Window win, 
+        int width, 
+        int height
+        );
+}
