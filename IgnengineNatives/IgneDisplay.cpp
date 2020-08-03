@@ -97,3 +97,14 @@ void AcquireHeightFromWas(
     width = gwa.width;
     height = gwa.height;
 }
+
+void GetBlackAndWhitePixel(
+        Display *display,
+        int screen,
+        unsigned long blackPixel,
+        unsigned long whitePixel
+        )
+{
+    blackPixel = BlackPixel(display,screen);
+    whitePixel = WhitePixel(display,screen);
+}

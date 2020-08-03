@@ -48,4 +48,11 @@ extern "C" {
         int width, 
         int height
         );
+
+    void GetBlackAndWhitePixel(
+        Display *display,
+        int screen,
+        unsigned long blackPixel,
+        unsigned long whitePixel
+        );
 }
