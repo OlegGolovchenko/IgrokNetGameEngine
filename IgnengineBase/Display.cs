@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using IgnengineBase;
 using IgnengineBase.GL;
 
 namespace IgnengineBase.Display
 {
 
-    public class Display
+    public class Display : UIComponents.IContainer
     {
         internal const long NoEventMask = 0L;
         internal const long KeyPressMask = (1L << 0);
@@ -34,16 +35,47 @@ namespace IgnengineBase.Display
         internal const long ColormapChangeMask = (1L << 23);
         internal const long OwnerGrabButtonMask = (1L << 24);
 
+        private uint _height, _width;
         private IntPtr _display;
+        internal IntPtr XDisplay
+        {
+            get
+            {
+                return _display;
+            }
+        }
         private IntPtr _root;
         private IntPtr _vi;
         private ulong _cmap;
         private IntPtr _swa;
         private IntPtr _win;
+        internal IntPtr Window
+        {
+            get
+            {
+                return _win;
+            }
+        }
         private IntPtr _glc;
         private bool _running = false;
-        public Display(string connectionString)
+
+        private IList<UIComponents.IComponent> _components;
+        public IList<UIComponents.IComponent> UIComponents
         {
+            get
+            {
+                if (_components == null)
+                {
+                    _components = new List<UIComponents.IComponent>();
+                }
+                return _components;
+            }
+        }
+
+        public Display(string connectionString, uint width, uint height)
+        {
+            _width = width;
+            _height = height;
             _display = Natives.XOpenDisplay(connectionString);
             if (_display == IntPtr.Zero)
             {
@@ -66,7 +98,7 @@ namespace IgnengineBase.Display
                     ExposureMask | KeyPressMask);
 
                 _win = Natives.XCreateWindow(_display, _root, 0, 0,
-                    600, 600, 0, depth, 1, visual, 1L << 13 | 1L << 11,
+                    _width, _height, 0, depth, 1, visual, 1L << 13 | 1L << 11,
                     _swa);
 
                 Natives.XMapWindow(_display, _win);
@@ -91,7 +123,7 @@ namespace IgnengineBase.Display
             }
         }
 
-        public Display() : this(null)
+        public Display(uint width, uint height) : this(null,width,height)
         {
 
         }
@@ -99,34 +131,92 @@ namespace IgnengineBase.Display
         public void Run(RenderFunc render)
         {
             Natives.glEnable(GLConsts.GL_DEPTH_TEST);
-            while (_running)    
+            while (_running)
             {
-                Natives.AcquireHeightFromWas(_display, _win,
-                    out var width, out var height);
 
                 IntPtr xev = Natives.GetNextEvent(_display);
                 if (Natives.IsExposeEvent(xev))
                 {
-                    Natives.glViewport(0, 0, width, height);
+                    try
+                    {
+                        Natives.glViewport(0, 0, ((int)_width), ((int)_height));
 
-                    Natives.glClearColor(1f, 1f, 1f, 1f);
+                        GetLastGLError();
 
-                    Natives.glClear(
-                        GLConsts.GL_COLOR_BUFFER_BIT | 
-                        GLConsts.GL_DEPTH_BUFFER_BIT
-                        );
+                        Natives.glClearColor(1f, 1f, 1f, 1f);
 
-                    Natives.glMatrixMode(GLConsts.GL_PROJECTION);
-                    Natives.glLoadIdentity();
-                    Natives.gluPerspective(70,width/(height*1.0),-1,1);
-                    Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
-                    Natives.glLoadIdentity();
+                        GetLastGLError();
 
-                    render?.Invoke(width, height);
-                    
-                    Natives.glLoadIdentity();
+                        Natives.glClear(
+                            GLConsts.GL_COLOR_BUFFER_BIT |
+                            GLConsts.GL_DEPTH_BUFFER_BIT
+                            );
 
-                    Natives.glXSwapBuffers(_display, _win);
+                        GetLastGLError();
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        Natives.glMatrixMode(GLConsts.GL_PROJECTION);
+
+                        GetLastGLError();
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        Natives.glOrtho(0, _width, _height, 0, -1, 1);
+
+                        GetLastGLError();
+
+                        Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
+
+                        GetLastGLError();
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        RenderUi(_width, _height);
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        Natives.glMatrixMode(GLConsts.GL_PROJECTION);
+
+                        GetLastGLError();
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        Natives.gluPerspective(70, _width / (_height * 1.0), -1, 1);
+
+                        GetLastGLError();
+
+                        Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
+
+                        GetLastGLError();
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        render?.Invoke(_width, _height);
+
+                        Natives.glLoadIdentity();
+
+                        GetLastGLError();
+
+                        Natives.glXSwapBuffers(_display, _win);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        _running = false;
+                    }
                 }
                 if (Natives.IsCloseEvent(xev, _display))
                 {
@@ -135,9 +225,46 @@ namespace IgnengineBase.Display
             }
         }
 
+        private void GetLastGLError()
+        {
+            var error = Natives.glGetError();
+            if (error == GLErrors.GL_OUT_OF_MEMORY)
+            {
+                throw new OutOfMemoryException("out of memory in opengl thrown");
+            }
+            else if (error == GLErrors.GL_STACK_OVERFLOW)
+            {
+                throw new StackOverflowException("Stack overflow in opengl");
+            }
+            else if (error == GLErrors.GL_STACK_UNDERFLOW)
+            {
+                throw new Exception("Stuck underflow in opengl");
+            }
+            else if (error == GLErrors.GL_INVALID_ENUM)
+            {
+                throw new Exception("Invalid enum in opengl");
+            }
+            else if (error == GLErrors.GL_INVALID_OPERATION)
+            {
+                throw new InvalidOperationException("Invalid operation in opengl");
+            }
+            else if (error == GLErrors.GL_INVALID_VALUE)
+            {
+                throw new Exception("Invalid value in opengl");
+            }
+        }
+
+        private void RenderUi(uint width, uint height)
+        {
+            foreach (var component in UIComponents)
+            {
+                component.Render(width, height);
+            }
+        }
+
         public void Destroy()
         {
-            if (_display != IntPtr.Zero && 
+            if (_display != IntPtr.Zero &&
                 _win != IntPtr.Zero)
             {
                 Natives.ClearGLXContext(_display, _win);
@@ -150,6 +277,16 @@ namespace IgnengineBase.Display
 
                 Natives.XCloseDisplay(_display);
             }
+        }
+
+        public void AddComponent(UIComponents.IComponent component)
+        {
+            UIComponents.Add(component);
+        }
+
+        public void RemoveComponent(UIComponents.IComponent component)
+        {
+            UIComponents.Remove(component);
         }
     }
 }

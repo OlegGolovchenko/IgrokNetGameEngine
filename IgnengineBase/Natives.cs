@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace IgnengineBase
 {
-    public delegate void RenderFunc(int width, int height);
+    public delegate void RenderFunc(uint width, uint height);
     public class Natives
     {
         #region "IgnNatives"
@@ -70,6 +70,14 @@ namespace IgnengineBase
             out int height
             );
 
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static void GetBlackAndWhitePixel(
+            IntPtr display,
+            int screen,
+            out ulong blackPixel,
+            out ulong whitePixel
+            );
+
         #endregion
 
         #region "Xlib"
@@ -130,6 +138,26 @@ namespace IgnengineBase
         internal extern static int XNextEvent(
             IntPtr display, 
             out IntPtr xev
+            );
+
+        [DllImport("libX11.so")]
+        internal extern static IntPtr XCreateSimpleWindow(
+            IntPtr display,
+            IntPtr window,
+            int x,
+            int y,
+            uint width,
+            uint height,
+            uint borderW,
+            ulong border,
+            ulong background
+            );
+        
+        [DllImport("libX11.so")]
+        internal extern static int XSelectInput(
+            IntPtr display,
+            IntPtr window,
+            long eventMask
             );
         
         #endregion
@@ -204,6 +232,46 @@ namespace IgnengineBase
         
         [DllImport("libGL.so")]
         internal extern static void glLoadIdentity();
+
+        [DllImport("libGL.so")]
+        internal extern static void glBegin(uint mode);
+
+        [DllImport("libGL.so")]
+        internal extern static void glEnd();
+
+        [DllImport("libGL.so")]
+        internal extern static void glVertex3f(
+            float x, 
+            float y, 
+            float z
+            );
+
+        [DllImport("libGL.so")]
+        internal extern static void glVertex2f(
+            float x,
+            float y
+            );
+
+        [DllImport("libGL.so")]
+        internal extern static void glOrtho(
+            double left, 
+            double right, 
+            double bottom, 
+            double top, 
+            double near_val, 
+            double far_val
+            );
+
+        [DllImport("libGL.so")]
+        internal extern static uint glGetError();
+
+        [DllImport("libGL.so")]
+        internal extern static void glColor4f(
+            float r,
+            float g, 
+            float b, 
+            float a
+            );
 
         [DllImport("libGLU.so")]
         internal extern static void gluPerspective(

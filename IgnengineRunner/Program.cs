@@ -1,5 +1,7 @@
 ﻿using System;
 using IgnengineBase.Display;
+using IgnengineBase.UIComponents;
+using IgnengineBase.UIComponents.UIContainers;
 
 namespace IgnengineRunner
 {
@@ -7,12 +9,16 @@ namespace IgnengineRunner
     {
         static void Main(string[] args)
         {
-            var display = new Display();
+            var display = new Display(600,600);
+            var panel = new Panel(20,20,100,100);
+            panel.Background = Color.Blue;
+            display.AddComponent(panel);
             display.Run(Render);
+            display.RemoveComponent(panel);
             display.Destroy();
         }
 
-        static void Render(int width,int height){
+        static void Render(uint width,uint height){
             Console.WriteLine("in render");
         }
     }
