@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using IgnengineBase.GL;
+using System.Linq;
 
 namespace IgnengineBase.UIComponents.UIContainers
 {
@@ -10,6 +11,9 @@ namespace IgnengineBase.UIComponents.UIContainers
         private float _y;
         private float _width;
         private float _height;
+        private float _borderWidth;
+
+        private IList<DrawablePoint> _points;
 
         private IList<UIComponents.IComponent> _components;
         public IList<UIComponents.IComponent> UIComponents
@@ -50,15 +54,23 @@ namespace IgnengineBase.UIComponents.UIContainers
             float x,
             float y,
             float width,
-            float height
+            float height,
+            float borderWidth
             )
         {
             _x = x;
             _y = y;
             _width = width;
             _height = height;
+            _borderWidth = borderWidth;
             Background = Color.White;
             Visible = true;
+            _points = new List<DrawablePoint>(){
+                DrawablePoint.GetInstance(x, y, 0),
+                DrawablePoint.GetInstance(x+width, y, 0),
+                DrawablePoint.GetInstance(x+width, y+height, 0),
+                DrawablePoint.GetInstance(x, y+height, 0)
+            };
         }
 
         public void AddComponent(UIComponents.IComponent component)
@@ -75,37 +87,36 @@ namespace IgnengineBase.UIComponents.UIContainers
         {
             if (Visible)
             {
-                var one = _x;
-                var two = _x + _width;
-                var three = _y;
-                var four = _y + _height;
+                Natives.glPointSize(1);
                 Natives.glBegin(GL.GLConsts.GL_QUADS);
-                Background.Apply();
-                Natives.glVertex2f(one, three);
-                Background.Apply();
-                Natives.glVertex2f(two, three);
-                Background.Apply();
-                Natives.glVertex2f(two, four);
-                Background.Apply();
-                Natives.glVertex2f(one, four);
+                foreach (var point in _points)
+                {
+                    Background.Apply();
+                    Natives.glVertex2f(point.X, point.Y);
+                }
                 Natives.glEnd();
                 GetLastGLError();
+                Natives.glPointSize(_borderWidth);
+                for (var i = 0; i < _points.Count - 1; i++)
+                {
+                    var point1 = _points[i];
+                    var point2 = _points[i+1];
+                    Natives.glBegin(GL.GLConsts.GL_LINES);
+                    _borderColor.Apply();
+                    Natives.glVertex2f(point1.X, point1.Y);
+                    Natives.glVertex2f(point2.X, point2.Y);
+                    Natives.glEnd();
+                    GetLastGLError();
+                }
+                var p1 = _points.LastOrDefault();
+                var p2 = _points.FirstOrDefault();
                 Natives.glBegin(GL.GLConsts.GL_LINES);
-                Natives.glVertex3f(one,three,1);
+                _borderColor.Apply();
+                Natives.glVertex2f(p1.X, p1.Y);
+                Natives.glVertex2f(p2.X, p2.Y);
                 Natives.glEnd();
                 GetLastGLError();
-                Natives.glBegin(GL.GLConsts.GL_LINES);
-                Natives.glVertex3f(two,three,1);
-                Natives.glEnd();
-                GetLastGLError();
-                Natives.glBegin(GL.GLConsts.GL_LINES);
-                Natives.glVertex3f(two,four,1);
-                Natives.glEnd();
-                GetLastGLError();
-                Natives.glBegin(GL.GLConsts.GL_LINES);
-                Natives.glVertex3f(one,four,1);
-                Natives.glEnd();
-                GetLastGLError();
+                Natives.glPointSize(1);
             }
         }   
 
