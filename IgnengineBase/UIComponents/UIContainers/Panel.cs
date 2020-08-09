@@ -56,6 +56,7 @@ namespace IgnengineBase.UIComponents.UIContainers
             float width,
             float height,
             float borderWidth
+            float height
             )
         {
             _x = x;
@@ -71,6 +72,8 @@ namespace IgnengineBase.UIComponents.UIContainers
                 DrawablePoint.GetInstance(x+width, y+height, 0),
                 DrawablePoint.GetInstance(x, y+height, 0)
             };
+            Background = Color.White;
+            Visible = true;
         }
 
         public void AddComponent(UIComponents.IComponent component)
