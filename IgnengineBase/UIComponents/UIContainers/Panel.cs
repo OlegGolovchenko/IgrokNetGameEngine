@@ -56,7 +56,6 @@ namespace IgnengineBase.UIComponents.UIContainers
             float width,
             float height,
             float borderWidth
-            float height
             )
         {
             _x = x;
