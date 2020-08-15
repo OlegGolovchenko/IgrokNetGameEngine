@@ -22,6 +22,14 @@ extern "C" {
         Display * dpy
         );
 
+    Bool IsKeyPress(XEvent *event);
+
+    unsigned int GetKeyCode(XEvent * event);
+
+    unsigned int GetKeyMod(XEvent * event);
+
+    unsigned long GetKeyDescription(XEvent * event);
+
     Visual * GetVisualAndDepth(
         XVisualInfo * vi, 
         int depth

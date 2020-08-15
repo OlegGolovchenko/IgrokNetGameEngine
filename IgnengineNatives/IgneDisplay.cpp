@@ -42,6 +42,32 @@ Bool IsCloseEvent(
     return False;
 }
 
+Bool IsKeyPress(XEvent *event)
+{
+    if(event->type == KeyPress)
+    {
+        return True;
+    }
+    return False;
+}
+
+unsigned int GetKeyCode(XEvent *event)
+{
+    return event->xkey.keycode;
+}
+
+unsigned int GetKeyMod(XEvent *event)
+{
+    return event->xkey.state;
+}
+
+unsigned long GetKeyDescription(XEvent *xev)
+{
+    XKeyEvent xke = xev->xkey;
+    KeySym ks = XLookupKeysym(&xke,0);
+    return ks;
+}
+
 Visual * GetVisualAndDepth(
     XVisualInfo * vi, 
     int depth

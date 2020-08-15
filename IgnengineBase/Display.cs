@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using IgnengineBase;
 using IgnengineBase.GL;
 
@@ -133,11 +134,41 @@ namespace IgnengineBase.Display
             Natives.glEnable(GLConsts.GL_DEPTH_TEST);
             while (_running)
             {
-
+                KeySymbols code = 0;
+                KeyMods mod = KeyMods.None;
+                var modDesc = "";
                 IntPtr xev = Natives.GetNextEvent(_display);
-                if (Natives.IsExposeEvent(xev))
+                if (Natives.IsKeyPress(xev))
                 {
-                    try
+                    code = (KeySymbols)Natives.GetKeyDescription(xev);
+                    mod = (KeyMods)Natives.GetKeyMod(xev);
+                    if(mod.HasFlag(KeyMods.ShiftMask)){
+                        modDesc = modDesc + "|Shift";
+                    }
+                    if(mod.HasFlag(KeyMods.ControlMask)){
+                        modDesc = modDesc + "|Ctrl";
+                    }
+                    if(mod.HasFlag(KeyMods.LockMask)){
+                        modDesc = modDesc + "|Lock";
+                    }
+                    if(mod.HasFlag(KeyMods.Mod1Mask)){
+                        modDesc = modDesc + "|Mod1";
+                    }
+                    if(mod.HasFlag(KeyMods.Mod2Mask)){
+                        modDesc = modDesc + "|Mod2";
+                    }
+                    if(mod.HasFlag(KeyMods.Mod3Mask)){
+                        modDesc = modDesc + "|Mod3";
+                    }
+                    if(mod.HasFlag(KeyMods.Mod4Mask)){
+                        modDesc = modDesc + "|Mod4";
+                    }
+                    if(mod.HasFlag(KeyMods.Mod5Mask)){
+                        modDesc = modDesc + "|Mod5";
+                    }
+                    Console.WriteLine($"key {code} modifier {modDesc}");
+                }
+                try
                     {
                         Natives.glViewport(0, 0, ((int)_width), ((int)_height));
 
@@ -217,7 +248,6 @@ namespace IgnengineBase.Display
                         Console.WriteLine(e);
                         _running = false;
                     }
-                }
                 if (Natives.IsCloseEvent(xev, _display))
                 {
                     _running = false;

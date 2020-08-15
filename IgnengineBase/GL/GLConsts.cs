@@ -1,4 +1,3 @@
-using System;
 namespace IgnengineBase.GL
 {
     internal class GLConsts
@@ -22,15 +21,5 @@ namespace IgnengineBase.GL
         internal const uint GL_QUADS = 0x0007;
         internal const uint GL_QUAD_STRIP = 0x0008;
         internal const uint GL_POLYGON = 0x0009;
-    }
-
-    internal class GLErrors{
-        internal const uint GL_NO_ERROR = 0;
-        internal const uint GL_INVALID_ENUM = 0x0500;
-        internal const uint GL_INVALID_VALUE = 0x0501;
-        internal const uint GL_INVALID_OPERATION = 0x0502;
-        internal const uint GL_STACK_OVERFLOW = 0x0503;
-        internal const uint GL_STACK_UNDERFLOW = 0x0504;
-        internal const uint GL_OUT_OF_MEMORY = 0x0505;
     }
 }

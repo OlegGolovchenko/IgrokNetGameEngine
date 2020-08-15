@@ -78,6 +78,18 @@ namespace IgnengineBase
             out ulong whitePixel
             );
 
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static bool IsKeyPress(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static uint GetKeyCode(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static uint GetKeyMod(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static ulong GetKeyDescription(IntPtr evnt);
+
         #endregion
 
         #region "Xlib"
