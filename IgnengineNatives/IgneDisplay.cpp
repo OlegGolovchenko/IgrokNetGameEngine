@@ -68,6 +68,25 @@ unsigned long GetKeyDescription(XEvent *xev)
     return ks;
 }
 
+Bool IsMouseButtonPressed(XEvent *event)
+{
+    if(event->type == ButtonPress)
+    {
+        return true;
+    }
+    return false;
+}
+
+unsigned int GetButton(XEvent * event)
+{
+    return event->xbutton.button;
+}
+
+unsigned int GetButtonMod(XEvent * event)
+{
+    return event->xbutton.state;
+}
+
 Visual * GetVisualAndDepth(
     XVisualInfo * vi, 
     int depth

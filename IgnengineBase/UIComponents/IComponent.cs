@@ -1,4 +1,5 @@
 using System;
+using IgnengineBase.GL;
 
 namespace IgnengineBase.UIComponents{
 
@@ -11,5 +12,10 @@ namespace IgnengineBase.UIComponents{
         float Transperency { get; set; }
 
         void Render(uint width, uint height);
+        
+
+        void KeyPressed(KeySymbols key, KeyMods mod);
+
+        void MousePressed(Buttons btn);
     }
 }

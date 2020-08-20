@@ -30,6 +30,14 @@ extern "C" {
 
     unsigned long GetKeyDescription(XEvent * event);
 
+    Bool IsMouseButtonPressed(XEvent * event);
+
+    unsigned int GetButton(XEvent * event);
+
+    unsigned int GetButtonMod(XEvent * event);
+
+    
+
     Visual * GetVisualAndDepth(
         XVisualInfo * vi, 
         int depth
