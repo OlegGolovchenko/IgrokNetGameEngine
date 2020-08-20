@@ -96,7 +96,7 @@ namespace IgnengineBase.Display
                     visual, 0);
 
                 _swa = Natives.GetSwaWith(_cmap,
-                    ExposureMask | KeyPressMask);
+                    ExposureMask | KeyPressMask | ButtonPressMask | PointerMotionMask);
 
                 _win = Natives.XCreateWindow(_display, _root, 0, 0,
                     _width, _height, 0, depth, 1, visual, 1L << 13 | 1L << 11,
@@ -124,7 +124,7 @@ namespace IgnengineBase.Display
             }
         }
 
-        public Display(uint width, uint height) : this(null,width,height)
+        public Display(uint width, uint height) : this(null, width, height)
         {
 
         }
@@ -142,112 +142,148 @@ namespace IgnengineBase.Display
                 {
                     code = (KeySymbols)Natives.GetKeyDescription(xev);
                     mod = (KeyMods)Natives.GetKeyMod(xev);
-                    if(mod.HasFlag(KeyMods.ShiftMask)){
+                    if (mod.HasFlag(KeyMods.ShiftMask))
+                    {
                         modDesc = modDesc + "|Shift";
                     }
-                    if(mod.HasFlag(KeyMods.ControlMask)){
+                    if (mod.HasFlag(KeyMods.ControlMask))
+                    {
                         modDesc = modDesc + "|Ctrl";
                     }
-                    if(mod.HasFlag(KeyMods.LockMask)){
+                    if (mod.HasFlag(KeyMods.LockMask))
+                    {
                         modDesc = modDesc + "|Lock";
                     }
-                    if(mod.HasFlag(KeyMods.Mod1Mask)){
+                    if (mod.HasFlag(KeyMods.Mod1Mask))
+                    {
                         modDesc = modDesc + "|Mod1";
                     }
-                    if(mod.HasFlag(KeyMods.Mod2Mask)){
+                    if (mod.HasFlag(KeyMods.Mod2Mask))
+                    {
                         modDesc = modDesc + "|Mod2";
                     }
-                    if(mod.HasFlag(KeyMods.Mod3Mask)){
+                    if (mod.HasFlag(KeyMods.Mod3Mask))
+                    {
                         modDesc = modDesc + "|Mod3";
                     }
-                    if(mod.HasFlag(KeyMods.Mod4Mask)){
+                    if (mod.HasFlag(KeyMods.Mod4Mask))
+                    {
                         modDesc = modDesc + "|Mod4";
                     }
-                    if(mod.HasFlag(KeyMods.Mod5Mask)){
+                    if (mod.HasFlag(KeyMods.Mod5Mask))
+                    {
                         modDesc = modDesc + "|Mod5";
                     }
                     Console.WriteLine($"key {code} modifier {modDesc}");
                 }
+                if (Natives.IsMouseButtonPressed(xev))
+                {
+                    var btn = Natives.GetButton(xev);
+                    mod = (KeyMods)Natives.GetButtonMod(xev);
+                    foreach (var component in UIComponents)
+                    {
+                        switch (btn)
+                        {
+                            case 1:
+                                component.MousePressed(Buttons.Button1);
+                                break;
+                            case 2:
+                                component.MousePressed(Buttons.Button2);
+                                break;
+                            case 3:
+                                component.MousePressed(Buttons.Button3);
+                                break;
+                            case 4:
+                                component.MousePressed(Buttons.Button4);
+                                break;
+                            case 5:
+                                component.MousePressed(Buttons.Button5);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
                 try
-                    {
-                        Natives.glViewport(0, 0, ((int)_width), ((int)_height));
+                {
+                    Natives.glViewport(0, 0, ((int)_width), ((int)_height));
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glClearColor(1f, 1f, 1f, 1f);
+                    Natives.glClearColor(1f, 1f, 1f, 1f);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glClear(
-                            GLConsts.GL_COLOR_BUFFER_BIT |
-                            GLConsts.GL_DEPTH_BUFFER_BIT
-                            );
+                    Natives.glClear(
+                        GLConsts.GL_COLOR_BUFFER_BIT |
+                        GLConsts.GL_DEPTH_BUFFER_BIT
+                        );
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glMatrixMode(GLConsts.GL_PROJECTION);
+                    Natives.glMatrixMode(GLConsts.GL_PROJECTION);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glOrtho(0, _width, _height, 0, -1, 1);
+                    Natives.glOrtho(0, _width, _height, 0, -1, 1);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
+                    Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        RenderUi(_width, _height);
+                    RenderUi(_width, _height);
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glMatrixMode(GLConsts.GL_PROJECTION);
+                    Natives.glMatrixMode(GLConsts.GL_PROJECTION);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.gluPerspective(70, _width / (_height * 1.0), -1, 1);
+                    Natives.gluPerspective(70, _width / (_height * 1.0), -1, 1);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
+                    Natives.glMatrixMode(GLConsts.GL_MODELVIEW);
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        render?.Invoke(_width, _height);
+                    render?.Invoke(_width, _height);
 
-                        Natives.glLoadIdentity();
+                    Natives.glLoadIdentity();
 
-                        GetLastGLError();
+                    GetLastGLError();
 
-                        Natives.glXSwapBuffers(_display, _win);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        _running = false;
-                    }
+                    Natives.glXSwapBuffers(_display, _win);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    _running = false;
+                }
                 if (Natives.IsCloseEvent(xev, _display))
                 {
                     _running = false;

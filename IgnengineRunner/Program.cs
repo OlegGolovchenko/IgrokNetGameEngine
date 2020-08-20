@@ -19,7 +19,6 @@ namespace IgnengineRunner
         }
 
         static void Render(uint width,uint height){
-            Console.WriteLine("in render");
         }
     }
 }

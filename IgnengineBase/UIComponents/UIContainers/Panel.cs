@@ -36,6 +36,10 @@ namespace IgnengineBase.UIComponents.UIContainers
             }
         }
 
+        public KeySymbols Keys { get; private set; }
+        public KeyMods KeyModification { get; private set; }
+        public Buttons MouseButtons { get; private set; }
+
         private Color _background;
         public Color Background
         {
@@ -153,5 +157,15 @@ namespace IgnengineBase.UIComponents.UIContainers
             }
         }
 
+        public void KeyPressed(KeySymbols key, KeyMods mod)
+        {
+            Keys = key;
+            KeyModification = mod;
+        }
+
+        public void MousePressed(Buttons btn)
+        {
+            MouseButtons = btn;
+        }
     }
 }

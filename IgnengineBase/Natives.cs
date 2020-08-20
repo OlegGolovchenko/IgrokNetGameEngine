@@ -90,6 +90,15 @@ namespace IgnengineBase
         [DllImport("libIgnEngineUi.so")]
         internal extern static ulong GetKeyDescription(IntPtr evnt);
 
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static bool IsMouseButtonPressed(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static uint GetButton(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static uint GetButtonMod(IntPtr evnt);
+
         #endregion
 
         #region "Xlib"
