@@ -36,7 +36,9 @@ extern "C" {
 
     unsigned int GetButtonMod(XEvent * event);
 
-    
+    int GetMouseX(XEvent * event);
+
+    int GetMouseY(XEvent * event);
 
     Visual * GetVisualAndDepth(
         XVisualInfo * vi, 

@@ -203,6 +203,7 @@ namespace IgnengineBase.Display
                                 break;
                         }
                     }
+                    Console.WriteLine($"mouse x {Natives.GetMouseX(xev)} mouse y {Natives.GetMouseY(xev)}");
                 }
                 try
                 {
