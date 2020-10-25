@@ -5,6 +5,10 @@ namespace IgnengineBase.UIComponents{
 
     public interface IComponent
     {
+        float MouseX { get; set; }
+
+        float MouseY { get; set; }
+
         bool Visible { get; set; }
 
         Color Background { get; set; }
@@ -16,6 +20,8 @@ namespace IgnengineBase.UIComponents{
 
         void KeyPressed(KeySymbols key, KeyMods mod);
 
-        void MousePressed(Buttons btn);
+        void MousePressed(Buttons btn, int x, int y);
+
+        bool ContainsCoordinates(int x, int y);
     }
 }

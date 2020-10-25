@@ -87,6 +87,18 @@ unsigned int GetButtonMod(XEvent * event)
     return event->xbutton.state;
 }
 
+int GetMouseX(XEvent * event)
+{
+    XButtonEvent btnEvent = event->xbutton;
+    return btnEvent.x;
+}
+
+int GetMouseY(XEvent * event)
+{
+    XButtonEvent btnEvent = event->xbutton;
+    return btnEvent.y;
+}
+
 Visual * GetVisualAndDepth(
     XVisualInfo * vi, 
     int depth
