@@ -20,15 +20,16 @@ namespace IgnengineBase.UIComponents.UIContainers
         {
             get
             {
-                if(_components == null){
+                if (_components == null)
+                {
                     _components = new List<UIComponents.IComponent>();
                 }
                 return _components;
             }
         }
         private bool _visible;
-        public bool Visible 
-        { 
+        public bool Visible
+        {
             get => _visible;
             set
             {
@@ -39,6 +40,10 @@ namespace IgnengineBase.UIComponents.UIContainers
         public KeySymbols Keys { get; private set; }
         public KeyMods KeyModification { get; private set; }
         public Buttons MouseButtons { get; private set; }
+
+        public float MouseX { get; set; }
+
+        public float MouseY { get; set; }
 
         private Color _background;
         public Color Background
@@ -106,7 +111,7 @@ namespace IgnengineBase.UIComponents.UIContainers
                 for (var i = 0; i < _points.Count - 1; i++)
                 {
                     var point1 = _points[i];
-                    var point2 = _points[i+1];
+                    var point2 = _points[i + 1];
                     Natives.glBegin(GL.GLConsts.GL_LINES);
                     _borderColor.Apply();
                     Natives.glVertex2f(point1.X, point1.Y);
@@ -124,10 +129,10 @@ namespace IgnengineBase.UIComponents.UIContainers
                 GetLastGLError();
                 Natives.glPointSize(1);
             }
-        }   
+        }
 
 
-        
+
         private void GetLastGLError()
         {
             var error = Natives.glGetError();
@@ -163,9 +168,18 @@ namespace IgnengineBase.UIComponents.UIContainers
             KeyModification = mod;
         }
 
-        public void MousePressed(Buttons btn)
+        public void MousePressed(Buttons btn, int x, int y)
         {
             MouseButtons = btn;
+            MouseX = x - _x;
+            MouseY = y - _y;
+        }
+
+        public bool ContainsCoordinates(int x, int y)
+        {
+            var xInside = x > _x && x < _x + _width;
+            var yInside = y > _y && y < _y + _height;
+            return xInside && yInside;
         }
     }
 }

@@ -180,30 +180,35 @@ namespace IgnengineBase.Display
                 {
                     var btn = Natives.GetButton(xev);
                     mod = (KeyMods)Natives.GetButtonMod(xev);
+                    var x = Natives.GetMouseX(xev);
+                    var y = Natives.GetMouseY(xev);
                     foreach (var component in UIComponents)
                     {
-                        switch (btn)
+                        if (component.ContainsCoordinates(x, y))
                         {
-                            case 1:
-                                component.MousePressed(Buttons.Button1);
-                                break;
-                            case 2:
-                                component.MousePressed(Buttons.Button2);
-                                break;
-                            case 3:
-                                component.MousePressed(Buttons.Button3);
-                                break;
-                            case 4:
-                                component.MousePressed(Buttons.Button4);
-                                break;
-                            case 5:
-                                component.MousePressed(Buttons.Button5);
-                                break;
-                            default:
-                                break;
+                            switch (btn)
+                            {
+                                case 1:
+                                    component.MousePressed(Buttons.Button1, x, y);
+                                    break;
+                                case 2:
+                                    component.MousePressed(Buttons.Button2, x, y);
+                                    break;
+                                case 3:
+                                    component.MousePressed(Buttons.Button3, x, y);
+                                    break;
+                                case 4:
+                                    component.MousePressed(Buttons.Button4, x, y);
+                                    break;
+                                case 5:
+                                    component.MousePressed(Buttons.Button5, x, y);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            Console.WriteLine($"mouse x {component.MouseX} mouse y {component.MouseY}");
                         }
                     }
-                    Console.WriteLine($"mouse x {Natives.GetMouseX(xev)} mouse y {Natives.GetMouseY(xev)}");
                 }
                 try
                 {
