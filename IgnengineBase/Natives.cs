@@ -94,6 +94,9 @@ namespace IgnengineBase
         internal extern static bool IsMouseButtonPressed(IntPtr evnt);
 
         [DllImport("libIgnEngineUi.so")]
+        internal extern static bool IsMouseMoved(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
         internal extern static uint GetButton(IntPtr evnt);
 
         [DllImport("libIgnEngineUi.so")]
@@ -104,6 +107,12 @@ namespace IgnengineBase
 
         [DllImport("libIgnEngineUi.so")]
         internal extern static int GetMouseY(IntPtr evnt);
+        
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static int GetMouseXOnMove(IntPtr evnt);
+
+        [DllImport("libIgnEngineUi.so")]
+        internal extern static int GetMouseYOnMove(IntPtr evnt);
 
         #endregion
 

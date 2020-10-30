@@ -210,6 +210,12 @@ namespace IgnengineBase.Display
                         }
                     }
                 }
+                if (Natives.IsMouseMoved(xev))
+                {
+                    var x = Natives.GetMouseXOnMove(xev);
+                    var y = Natives.GetMouseYOnMove(xev);
+                    Console.WriteLine($"mouse x {x} mouse y {y}");
+                }
                 try
                 {
                     Natives.glViewport(0, 0, ((int)_width), ((int)_height));

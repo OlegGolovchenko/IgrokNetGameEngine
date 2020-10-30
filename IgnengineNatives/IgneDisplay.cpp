@@ -77,6 +77,14 @@ Bool IsMouseButtonPressed(XEvent *event)
     return false;
 }
 
+Bool IsMouseMoved(XEvent * event)
+{
+    if(event->type == MotionNotify){
+        return true;
+    }
+    return false;
+}
+
 unsigned int GetButton(XEvent * event)
 {
     return event->xbutton.button;
@@ -96,6 +104,18 @@ int GetMouseX(XEvent * event)
 int GetMouseY(XEvent * event)
 {
     XButtonEvent btnEvent = event->xbutton;
+    return btnEvent.y;
+}
+
+int GetMouseXOnMove(XEvent * event)
+{
+    XMotionEvent btnEvent = event->xmotion;
+    return btnEvent.x;
+}
+
+int GetMouseYOnMove(XEvent * event)
+{
+    XMotionEvent btnEvent = event->xmotion;
     return btnEvent.y;
 }
 

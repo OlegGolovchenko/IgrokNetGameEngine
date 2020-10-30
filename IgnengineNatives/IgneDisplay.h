@@ -32,6 +32,8 @@ extern "C" {
 
     Bool IsMouseButtonPressed(XEvent * event);
 
+    Bool IsMouseMoved(XEvent * event);
+
     unsigned int GetButton(XEvent * event);
 
     unsigned int GetButtonMod(XEvent * event);
@@ -39,6 +41,10 @@ extern "C" {
     int GetMouseX(XEvent * event);
 
     int GetMouseY(XEvent * event);
+    
+    int GetMouseXOnMove(XEvent * event);
+
+    int GetMouseYOnMove(XEvent * event);
 
     Visual * GetVisualAndDepth(
         XVisualInfo * vi, 
