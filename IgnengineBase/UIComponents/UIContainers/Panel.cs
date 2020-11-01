@@ -186,14 +186,17 @@ namespace IgnengineBase.UIComponents.UIContainers
             return xInside && yInside;
         }
 
+        private bool _mouseWasInside;
         public void EvaluateMouseLeaving(int x, int y)
         {
-            if(ContainsCoordinates(x,y)){
+            if(ContainsCoordinates(x,y) && ! _mouseWasInside){
                 OnMouseEntering?.Invoke(this,new MouseEnteringEventArgs(this));
+                _mouseWasInside = true;
             }
-            else
+            if(!ContainsCoordinates(x,y) && _mouseWasInside)
             {
                 OnMouseLeaving?.Invoke(this,new MouseLeavingEventArgs(this));
+                _mouseWasInside = false;
             }
         }
     }
