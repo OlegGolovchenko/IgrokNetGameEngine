@@ -1,5 +1,6 @@
 using System;
 using IgnengineBase.GL;
+using IgnengineBase.UIEvents;
 
 namespace IgnengineBase.UIComponents{
 
@@ -23,5 +24,11 @@ namespace IgnengineBase.UIComponents{
         void MousePressed(Buttons btn, int x, int y);
 
         bool ContainsCoordinates(int x, int y);
+
+        event EventHandler<MouseEnteringEventArgs> OnMouseEntering;
+
+        event EventHandler<MouseLeavingEventArgs> OnMouseLeaving;
+
+        void EvaluateMouseLeaving(int x, int y);
     }
 }

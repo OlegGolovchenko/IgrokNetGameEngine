@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using IgnengineBase.GL;
 using System.Linq;
+using IgnengineBase.UIEvents;
 
 namespace IgnengineBase.UIComponents.UIContainers
 {
@@ -56,6 +57,9 @@ namespace IgnengineBase.UIComponents.UIContainers
         }
 
         private Color _borderColor = Color.Black;
+
+        public event EventHandler<MouseEnteringEventArgs> OnMouseEntering;
+        public event EventHandler<MouseLeavingEventArgs> OnMouseLeaving;
 
         public float Transperency { get => Background.A; set => Background.ApplyTransperency(value); }
 
@@ -180,6 +184,17 @@ namespace IgnengineBase.UIComponents.UIContainers
             var xInside = x > _x && x < _x + _width;
             var yInside = y > _y && y < _y + _height;
             return xInside && yInside;
+        }
+
+        public void EvaluateMouseLeaving(int x, int y)
+        {
+            if(ContainsCoordinates(x,y)){
+                OnMouseEntering?.Invoke(this,new MouseEnteringEventArgs(this));
+            }
+            else
+            {
+                OnMouseLeaving?.Invoke(this,new MouseLeavingEventArgs(this));
+            }
         }
     }
 }

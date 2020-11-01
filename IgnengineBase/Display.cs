@@ -214,7 +214,10 @@ namespace IgnengineBase.Display
                 {
                     var x = Natives.GetMouseXOnMove(xev);
                     var y = Natives.GetMouseYOnMove(xev);
-                    Console.WriteLine($"mouse x {x} mouse y {y}");
+                    foreach(var component in _components)
+                    {
+                        component.EvaluateMouseLeaving(x,y);
+                    }
                 }
                 try
                 {
