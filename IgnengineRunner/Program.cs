@@ -1,5 +1,5 @@
 ﻿using System;
-using IgnengineBase.Display;
+using IgnengineBase;
 using IgnengineBase.UIComponents;
 using IgnengineBase.UIComponents.UIContainers;
 

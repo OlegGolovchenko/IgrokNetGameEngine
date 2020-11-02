@@ -4,7 +4,7 @@ using System.Text;
 using IgnengineBase;
 using IgnengineBase.GL;
 
-namespace IgnengineBase.Display
+namespace IgnengineBase
 {
 
     public class Display : UIComponents.IContainer
